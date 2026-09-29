@@ -1,0 +1,28 @@
+<div class="auth-card">
+  <h1>Administrator sign in</h1>
+  <p class="muted">Sign in with an administrator account to reach the dashboard.</p>
+
+  <% if (errors && errors.length) { %>
+    <div class="alert alert-error"><%= errors.join(' ') %></div>
+  <% } %>
+
+  <form method="post" action="/login" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="next" value="<%= next %>">
+
+    <label for="username">Username</label>
+    <input id="username" name="username" value="<%= form.username %>" required
+           autocomplete="username" maxlength="24" autofocus>
+
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" required
+           autocomplete="current-password" maxlength="200">
+
+    <button class="btn btn-block" type="submit">Sign in to dashboard</button>
+  </form>
+
+  <p class="muted center">
+    <a href="/">Back to the site</a> &middot;
+    <a href="/login">Regular sign in</a>
+  </p>
+</div>

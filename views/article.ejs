@@ -1,0 +1,58 @@
+<article class="reader">
+  <header class="reader-head">
+    <p class="crumbs">
+      <a href="/">Articles</a> / <span><%= article.category %></span>
+    </p>
+    <h1><span class="num-inline"><%= article.number %></span> <%= article.title %></h1>
+    <p class="lede"><%= article.summary %></p>
+    <p class="reader-meta">
+      <span><%= article.minutes %> min read</span>
+      <span>Published <%= article.created_at %></span>
+      <span>Updated <%= article.updated_at %></span>
+      <span><%= article.downloads %> downloads</span>
+    </p>
+  </header>
+
+  <% if (currentUser) { %>
+    <div class="download-bar">
+      <div>
+        <strong>Download this article</strong>
+        <p class="muted">ZIP archive containing Markdown, plain text and metadata.</p>
+      </div>
+      <a class="btn" href="/download/<%= article.number %>.zip">Download <%= article.number %>.zip</a>
+    </div>
+  <% } else { %>
+    <div class="download-bar gate">
+      <div>
+        <strong>Sign up to download this article</strong>
+        <p class="muted">
+          A free account takes about twenty seconds and unlocks ZIP downloads for all
+          <%= totalArticles %> articles.
+        </p>
+      </div>
+      <span class="btn-row">
+        <a class="btn" href="/register">Sign up</a>
+        <a class="btn btn-ghost" href="/login?next=/<%= article.number %>">Sign in</a>
+      </span>
+    </div>
+  <% } %>
+
+  <div class="prose">
+    <%- article.html %>
+  </div>
+
+  <nav class="pager">
+    <% if (prev) { %>
+      <a class="pager-link" href="/<%= prev %>"><span>Previous</span> Article <%= prev %></a>
+    <% } else { %><span></span><% } %>
+    <% if (next) { %>
+      <a class="pager-link right" href="/<%= next %>"><span>Next</span> Article <%= next %></a>
+    <% } else { %><span></span><% } %>
+  </nav>
+
+  <% if (isAdmin) { %>
+    <p class="admin-links">
+      <a href="/admin/articles/<%= article.id %>/edit">Edit this article</a>
+    </p>
+  <% } %>
+</article>

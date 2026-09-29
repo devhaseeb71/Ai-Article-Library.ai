@@ -1,0 +1,38 @@
+<div class="auth-card">
+  <h1>Create your account</h1>
+  <p class="muted">Free, and required only for downloading articles as ZIP files.</p>
+
+  <% if (errors && errors.length) { %>
+    <div class="alert alert-error">
+      <ul class="plain">
+        <% errors.forEach(function (e) { %><li><%= e %></li><% }); %>
+      </ul>
+    </div>
+  <% } %>
+
+  <form method="post" action="/register" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <label for="username">Username</label>
+    <input id="username" name="username" value="<%= form.username %>" required
+           autocomplete="username" minlength="3" maxlength="24" pattern="[A-Za-z0-9._\-]{3,24}">
+    <p class="hint">3-24 characters: letters, numbers, dot, dash, underscore.</p>
+
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" value="<%= form.email %>" required
+           autocomplete="email" maxlength="190">
+
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" required
+           autocomplete="new-password" minlength="10" maxlength="200">
+    <p class="hint">At least 10 characters, including a letter and a number.</p>
+
+    <label for="confirmPassword">Confirm password</label>
+    <input id="confirmPassword" name="confirmPassword" type="password" required
+           autocomplete="new-password" minlength="10" maxlength="200">
+
+    <button class="btn btn-block" type="submit">Create account</button>
+  </form>
+
+  <p class="muted center">Already registered? <a href="/login">Sign in</a></p>
+</div>

@@ -1,0 +1,138 @@
+<div class="admin">
+  <div class="admin-head">
+    <div>
+      <h1>Admin dashboard</h1>
+      <p class="muted">Manage articles, users and downloads.</p>
+    </div>
+    <a class="btn" href="/admin/articles/new">+ New article</a>
+  </div>
+
+  <section class="stats">
+    <div class="stat"><span class="stat-num"><%= stats.articles %></span><span class="stat-label">Articles</span></div>
+    <div class="stat"><span class="stat-num"><%= stats.published %></span><span class="stat-label">Published</span></div>
+    <div class="stat"><span class="stat-num"><%= stats.users %></span><span class="stat-label">Users</span></div>
+    <div class="stat"><span class="stat-num"><%= stats.downloads %></span><span class="stat-label">Download events</span></div>
+    <div class="stat"><span class="stat-num"><%= stats.totalArticleDownloads %></span><span class="stat-label">Total downloads</span></div>
+  </section>
+
+  <section>
+    <h2>Articles</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Title</th><th>Category</th><th>Status</th>
+            <th class="num-col">Downloads</th><th>Updated</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% articles.forEach(function (a) { %>
+            <tr>
+              <td><a href="/<%= a.number %>"><%= a.number %></a></td>
+              <td><strong><%= a.title %></strong><br><span class="muted small"><%= a.excerpt %></span></td>
+              <td><%= a.category %></td>
+              <td>
+                <span class="badge <%= a.status === 'published' ? 'ok' : 'draft' %>"><%= a.status %></span>
+              </td>
+              <td class="num-col"><%= a.downloads %></td>
+              <td class="muted small"><%= a.updated_at %></td>
+              <td class="actions">
+                <a class="btn btn-sm btn-ghost" href="/admin/articles/<%= a.id %>/edit">Edit</a>
+                <form method="post" action="/admin/articles/<%= a.id %>/status" class="inline-form">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button class="btn btn-sm btn-ghost" type="submit">
+                    <%= a.status === 'published' ? 'Unpublish' : 'Publish' %>
+                  </button>
+                </form>
+                <form method="post" action="/admin/articles/<%= a.id %>/delete" class="inline-form"
+                      onsubmit="return confirm('Delete article <%= a.number %>? This cannot be undone.')">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Users</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <% users.forEach(function (u) { %>
+            <tr>
+              <td><%= u.id %></td>
+              <td><strong><%= u.username %></strong><% if (u.id === currentUser.id) { %> <span class="muted small">(you)</span><% } %></td>
+              <td><%= u.email %></td>
+              <td><span class="badge <%= u.role %>"><%= u.role %></span></td>
+              <td class="muted small"><%= u.created_at %></td>
+              <td class="actions">
+                <% if (u.id !== currentUser.id) { %>
+                  <form method="post" action="/admin/users/<%= u.id %>/role" class="inline-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button class="btn btn-sm btn-ghost" type="submit">
+                      Make <%= u.role === 'admin' ? 'user' : 'admin' %>
+                    </button>
+                  </form>
+                  <form method="post" action="/admin/users/<%= u.id %>/delete" class="inline-form"
+                        onsubmit="return confirm('Delete user <%= u.username %>?')">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                  </form>
+                <% } else { %>
+                  <span class="muted small">-</span>
+                <% } %>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="two-col">
+    <div>
+      <h2>Most downloaded</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Title</th><th class="num-col">Downloads</th></tr></thead>
+          <tbody>
+            <% topArticles.forEach(function (a) { %>
+              <tr>
+                <td><%= a.number %></td>
+                <td><a href="/<%= a.number %>"><%= a.title %></a></td>
+                <td class="num-col"><%= a.downloads %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <h2>Recent downloads</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>When</th><th>User</th><th>Article</th></tr></thead>
+          <tbody>
+            <% if (!recentDownloads.length) { %>
+              <tr><td colspan="3" class="muted">No downloads yet.</td></tr>
+            <% } %>
+            <% recentDownloads.forEach(function (d) { %>
+              <tr>
+                <td class="muted small"><%= d.created_at %></td>
+                <td><%= d.username %></td>
+                <td><a href="/<%= d.number %>">#<%= d.number %> <%= d.title %></a></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>

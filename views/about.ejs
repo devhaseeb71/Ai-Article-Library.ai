@@ -1,0 +1,36 @@
+<h1>About this site</h1>
+<div class="prose">
+  <p>
+    This is a local development build of an AI article library. It contains
+    <strong><%= totalArticles %> articles</strong> on artificial intelligence, machine
+    learning, generative AI, agents, evaluation, security and deployment.
+  </p>
+
+  <h3>How access works</h3>
+  <p>
+    Every article can be read by anyone, no account required. Downloading an article as a
+    ZIP archive requires a free account. Once signed in you can download any article, and
+    each archive contains the full text as Markdown and plain text, a metadata file, and a
+    licence notice.
+  </p>
+
+  <h3>Administration</h3>
+  <p>
+    Administrators get a dashboard for adding new articles, editing or unpublishing
+    existing ones, promoting and removing users, and reviewing the download log. The
+    first administrator account is created automatically when the server starts.
+  </p>
+
+  <h3>Security in this build</h3>
+  <ul>
+    <li>Passwords hashed with bcrypt using a per-password salt.</li>
+    <li>Session identifier regenerated on sign-in and sign-up to prevent session fixation.</li>
+    <li>Cookies marked HttpOnly and SameSite, Secure when running in production mode.</li>
+    <li>CSRF token required on every state-changing request.</li>
+    <li>Content Security Policy and other headers via Helmet, with no inline scripts.</li>
+    <li>Rate limiting on sign-in, sign-up and download endpoints.</li>
+    <li>All output HTML-escaped before the small markup subset is applied.</li>
+    <li>Downloads built in memory, so no file paths are ever taken from user input.</li>
+    <li>Parameterised SQL statements throughout, so no query is built from user input.</li>
+  </ul>
+</div>

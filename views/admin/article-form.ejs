@@ -1,0 +1,68 @@
+<div class="admin">
+  <p class="crumbs"><a href="/admin">Dashboard</a> / <%= mode === 'create' ? 'New article' : 'Edit article' %></p>
+  <h1><%= mode === 'create' ? 'New article' : 'Edit article ' + article.number %></h1>
+
+  <% if (errors && errors.length) { %>
+    <div class="alert alert-error">
+      <ul class="plain">
+        <% errors.forEach(function (e) { %><li><%= e %></li><% }); %>
+      </ul>
+    </div>
+  <% } %>
+
+  <form method="post"
+        action="<%= mode === 'create' ? '/admin/articles' : '/admin/articles/' + article.id %>"
+        class="admin-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <div class="row-2">
+      <div>
+        <label for="title">Title</label>
+        <input id="title" name="title" value="<%= article.title %>" required maxlength="200">
+      </div>
+      <div>
+        <label for="number">Article number</label>
+        <input id="number" name="number" type="number" min="1" max="999"
+               value="<%= article.number %>" <%= mode === 'edit' ? 'disabled' : '' %> required>
+        <% if (mode === 'edit') { %><input type="hidden" name="number" value="<%= article.number %>"><% } %>
+        <p class="hint">The public URL is /<%= article.number %></p>
+      </div>
+    </div>
+
+    <label for="summary">Summary</label>
+    <input id="summary" name="summary" value="<%= article.summary %>" maxlength="500">
+
+    <div class="row-2">
+      <div>
+        <label for="category">Category</label>
+        <input id="category" name="category" value="<%= article.category %>" maxlength="60" list="cat-list">
+        <datalist id="cat-list">
+          <% categories.forEach(function (c) { %><option value="<%= c %>"><% }); %>
+        </datalist>
+      </div>
+      <div>
+        <label for="status">Status</label>
+        <select id="status" name="status">
+          <option value="published" <%= article.status === 'published' ? 'selected' : '' %>>Published</option>
+          <option value="draft" <%= article.status === 'draft' ? 'selected' : '' %>>Draft (hidden)</option>
+        </select>
+      </div>
+    </div>
+
+    <label for="content">Content</label>
+    <p class="hint">
+      Formatting: <code>## Heading</code>, <code>- bullet</code>, <code>1. numbered</code>,
+      <code>**bold**</code>, <code>`code`</code>. Blank line starts a new paragraph.
+      HTML is escaped, so no scripts can be injected.
+    </p>
+    <textarea id="content" name="content" rows="22" required><%= article.content %></textarea>
+
+    <div class="form-actions">
+      <button class="btn" type="submit"><%= mode === 'create' ? 'Create article' : 'Save changes' %></button>
+      <a class="btn btn-ghost" href="/admin">Cancel</a>
+      <% if (mode === 'edit') { %>
+        <a class="btn btn-ghost" href="/<%= article.number %>">View article</a>
+      <% } %>
+    </div>
+  </form>
+</div>

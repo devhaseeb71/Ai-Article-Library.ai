@@ -1,0 +1,30 @@
+<div class="auth-card">
+  <h1>Sign in</h1>
+  <% if (String(next).indexOf('/admin') === 0) { %>
+    <p class="muted">Sign in with an administrator account to reach the dashboard.</p>
+  <% } else { %>
+    <p class="muted">Required to download articles. Reading stays open to everyone.</p>
+  <% } %>
+
+  <% if (errors && errors.length) { %>
+    <div class="alert alert-error"><%= errors.join(' ') %></div>
+  <% } %>
+
+  <form method="post" action="/login" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="next" value="<%= next %>">
+
+    <label for="username">Username</label>
+    <input id="username" name="username" value="<%= form.username %>" required
+           autocomplete="username" maxlength="24" autofocus>
+
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" required
+           autocomplete="current-password" maxlength="200">
+
+    <button class="btn btn-block" type="submit">Sign in</button>
+  </form>
+
+  <p class="muted center">No account yet? <a href="/register">Create one</a></p>
+  <p class="muted center hint">Administrator? <a href="/admin/login">Admin sign in</a></p>
+</div>

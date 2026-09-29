@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="same-origin">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:,">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/">
+        <span class="brand-mark">AI</span>
+        <span class="brand-text">Articles Library</span>
+      </a>
+
+      <nav class="site-nav" aria-label="Main">
+        <a href="/">Articles</a>
+        <a href="/about">About</a>
+        <% if (currentUser) { %>
+          <% if (isAdmin) { %><a href="/admin">Dashboard</a><% } %>
+          <span class="who">
+            <%= currentUser.username %>
+            <span class="badge <%= currentUser.role %>"><%= currentUser.role %></span>
+          </span>
+          <form method="post" action="/logout" class="inline-form">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn btn-ghost btn-sm" type="submit">Sign out</button>
+          </form>
+        <% } else { %>
+          <a href="/login">Sign in</a>
+          <a class="btn btn-sm" href="/register">Create account</a>
+        <% } %>
+      </nav>
+    </div>
+  </header>
+
+  <% if (flash && flash.length) { %>
+    <div class="wrap">
+      <% flash.forEach(function (f) { %>
+        <div class="alert alert-<%= f.type %>"><%= f.message %></div>
+      <% }); %>
+    </div>
+  <% } %>
+
+  <main class="wrap page">
+    <%- body %>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>AI Articles Library &middot; <%= totalArticles %> articles &middot; local development build</p>
+      <p class="muted">Reading is open to everyone. Downloading requires a free account.</p>
+    </div>
+  </footer>
+</body>
+</html>

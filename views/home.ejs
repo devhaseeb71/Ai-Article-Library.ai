@@ -1,0 +1,65 @@
+<section class="hero">
+  <h1>The AI Articles Library</h1>
+  <p class="lede">
+    <%= totalArticles %> in-depth articles on artificial intelligence, from fundamentals to
+    agents, evaluation and deployment. Read every article free. Sign up to download any
+    article as a ZIP archive.
+  </p>
+  <div class="hero-actions">
+    <a class="btn" href="#articles">Browse all articles</a>
+    <% if (!currentUser) { %>
+      <a class="btn btn-ghost" href="/register">Create a free account</a>
+    <% } else { %>
+      <a class="btn btn-ghost" href="/admin">Open dashboard</a>
+    <% } %>
+  </div>
+</section>
+
+<% if (!currentUser) { %>
+  <aside class="callout">
+    <strong>Why sign up?</strong>
+    Reading is open to everyone. A free account is only needed to download an article as a
+    ZIP file, which lets us keep costs down and stop automated scraping.
+  </aside>
+<% } %>
+
+<section id="articles">
+  <div class="section-head">
+    <h2>All articles</h2>
+    <form method="get" action="/" class="filter">
+      <label for="category">Filter by category</label>
+      <select id="category" name="category">
+        <option value="">All categories</option>
+        <% categories.forEach(function (c) { %>
+          <option value="<%= c %>" <%= c === activeCategory ? 'selected' : '' %>><%= c %></option>
+        <% }); %>
+      </select>
+      <button class="btn btn-sm btn-ghost" type="submit">Apply</button>
+    </form>
+  </div>
+
+  <% if (!articles.length) { %>
+    <p class="muted">No articles match that filter.</p>
+  <% } %>
+
+  <ol class="grid">
+    <% articles.forEach(function (a) { %>
+      <li class="card">
+        <div class="card-top">
+          <span class="num"><%= a.number %></span>
+          <span class="tag"><%= a.category %></span>
+          <% if (a.status !== 'published') { %><span class="tag draft">draft</span><% } %>
+        </div>
+        <h3><a href="/<%= a.number %>"><%= a.title %></a></h3>
+        <p class="card-excerpt"><%= a.excerpt %></p>
+        <div class="card-meta">
+          <span><%= a.minutes %> min read</span>
+          <span><%= a.downloads %> downloads</span>
+        </div>
+        <% if (currentUser) { %>
+          <a class="dl" href="/download/<%= a.number %>.zip">Download ZIP</a>
+        <% } %>
+      </li>
+    <% }); %>
+  </ol>
+</section>
